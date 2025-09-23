@@ -1,3 +1,13 @@
+<?php
+    // Verificar se foi feito um submit
+    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+        //  guardar o valor de uma input (POST) em uma variavel 
+        // e verificar se ela existe
+        $email = $_POST["email" ?? ""];
+        $senha = $_POST["senha" ?? ""];
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR" data-bs-theme="auto">
 
@@ -55,7 +65,7 @@
                     <svg class="bi me-2 opacity-50" aria-hidden="true">
                         <use href="#sun-fill"></use>
                     </svg>
-                    Light
+                    Claro
                     <svg class="bi ms-auto d-none" aria-hidden="true">
                         <use href="#check2"></use>
                     </svg>
@@ -67,7 +77,7 @@
                     <svg class="bi me-2 opacity-50" aria-hidden="true">
                         <use href="#moon-stars-fill"></use>
                     </svg>
-                    Dark
+                    Escuro
                     <svg class="bi ms-auto d-none" aria-hidden="true">
                         <use href="#check2"></use>
                     </svg>
@@ -89,7 +99,7 @@
     </div>
 
     <main class="form-signin w-100 m-auto">
-        <form method="post">
+        <form method="post"> 
             <img class="mb-4" src="./img/logotipo.png" alt="" width="64">
             <h1 class="h3 mb-3 fw-normal">Login</h1>
             <div class="form-floating">
