@@ -1,11 +1,45 @@
 <?php
-    // Verificar se foi feito um submit
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        //  guardar o valor de uma input (POST) em uma variavel 
-        // e verificar se ela existe
-        $email = $_POST["email" ?? ""];
-        $senha = $_POST["senha" ?? ""];
+session_start();
+// Incluir a conexao com o banco de dados 
+//Utilizar o .. smpre que eu quiser chamar um arquivo de outra pasta
+include_once("../db/conexao.php");
+// Verificar se foi feito um submit
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //  guardar o valor de uma input (POST) em uma variavel 
+    // e verificar se ela existe
+    $email = $_POST['email'] ?? '';
+    $senha = $_POST['senha'] ?? '';
+
+    // Verificar se recebi o email e a senha 
+    if ($email != '' && $senha != '') {
+        // Conectar no banco de dados 
+        $sql = "SELECT * 
+        FROM usuarios
+        WHERE email = ? and senha = MD5(?) ";
+        // comando praa selecionar os dados de uma tabela 
+        // $resultado = $conexao->query($sql);
+        $stmt = $conexao->prepare($sql);
+        $stmt->bind_param("ss", $email, $senha);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        // Ler os dados 
+        while ($linha = $resultado->fetch_object()) {
+            $usuario_id = $linha->usuario_id;
+            $usuario_nome = $linha->nome;
+            $_SESSION["usuario_id"] = $usuario_id;
+            $_SESSION["usuario_nome"] = $usuario_nome;
+            header("Location: principal.php");
+            exit(); // e uma boa prática colocar o exit depois 
+        }
+
+        if ($resultado->num_rows == 0) {
+            $erro = "email / senha não encontrados";
+        }
+    } else {
+        $erro = "Não foi possível validar o email / senha ";
     }
+}
 ?>
 
 <!DOCTYPE html>
@@ -99,18 +133,26 @@
     </div>
 
     <main class="form-signin w-100 m-auto">
-        <form method="post"> 
+        <form method="post">
             <img class="mb-4" src="./img/logotipo.png" alt="" width="64">
             <h1 class="h3 mb-3 fw-normal">Login</h1>
             <div class="form-floating">
-                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+                <input required type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
                 <label for="email">email</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control" id="senha" name="senha" placeholder="Password">
+                <input required minlength="6" type="password" class="form-control" id="senha" name="senha" placeholder="Password">
                 <label for="senha">Senha</label>
             </div>
             <button class="btn btn-primary w-100 py-2" type="submit">Entrar</button>
+            <?php
+            // comando para verificar se uma variavel existe 
+            if (isset($erro) == true) {
+                echo ("<div class='alert alert-danger mt-2 p-2 small text-center' >");
+                echo ("$erro");
+                echo ("</div>");
+            }
+            ?>
         </form>
     </main>
 

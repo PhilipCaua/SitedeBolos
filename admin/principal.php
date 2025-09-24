@@ -1,3 +1,15 @@
+<?php
+session_start();
+// Verificar se a variavel não existe, usar o ! na frente
+// trecho padrão para proteger as páginas
+if (!isset($_SESSION['usuario_id'])) {
+  header("Location: login.php");
+  exit();
+}
+include_once("../db/conexao.php");
+
+?>
+
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
 
