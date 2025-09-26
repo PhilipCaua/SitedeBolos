@@ -1,3 +1,15 @@
+@media (min-width: 768px) {
+    .sidebar {
+        height: calc(100vh - 70px);
+        overflow: auto;
+        position: fixed;
+    }
+}
+
+.navbar {
+    min-height: 70px;
+}
+
 .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
