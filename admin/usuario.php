@@ -36,12 +36,12 @@ $total = $resultado->num_rows;
           <h1 class="h2">Usuários - Pesquisa</h1>
           <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
-              <button type="button" class="btn btn-sm btn-outline-secondary">
-                Botão 1
-              </button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">
-                Botão 2
-              </button>
+              <a href="./cad_usuario.php" class="btn btn-sm btn-primary">
+                Novo
+              </a>
+              <a href="./usuario.php" class="btn btn-sm btn-warning">
+                Pesquisa
+              </a>
             </div>
           </div>
         </div>
@@ -66,12 +66,12 @@ $total = $resultado->num_rows;
                   $i++;
                 ?>
                   <tr>
-                    <th scope="row"><?=$i ?></th>
-                    <td><?=$linha->nome ?></td>
-                    <td><?=$linha->email ?></td>
+                    <th scope="row"><?= $i ?></th>
+                    <td><?= $linha->nome ?></td>
+                    <td><?= $linha->email ?></td>
                     <td>
-                      <a href="./cad_usuario.php" class="btn btn-primary me-2">
-                        <i class="fa-solid fa-pen-to-square"></i> 
+                      <a href="./cad_usuario.php?id=<?= $linha->usuario_id ?>" class="btn btn-primary me-2">
+                        <i class="fa-solid fa-pen-to-square"></i>
                       </a>
                       <button class="btn btn-danger btn-sm" type="button">
                         <i class="fa-solid fa-trash-can"></i>
