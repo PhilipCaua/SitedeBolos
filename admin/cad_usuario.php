@@ -5,6 +5,9 @@ $titulo = "Novo";
 $nome = $_POST["nome"] ?? "";
 $email = $_POST["email"] ?? "";
 $senha = $_POST["senha"] ?? "";
+$foto = $_FILES[""] ?? "";
+print_r($foto);
+
 
 if (is_numeric($id)) {
   $sql = "SELECT * FROM usuarios WHERE usuario_id = ?";
@@ -22,8 +25,32 @@ if (is_numeric($id)) {
     $senha = $linha->senha;
     $foto = $linha->foto;
     $titulo = "Alterar ";
+    // CRIAR PASTA 
+    $caminho = __DIR__ . "/img";
+    $pasta = str_pad($id, 4, "0", STR_PAD_LEFT);
+    // $pasta = sprintf("%03d", 1); // mesma coisa que a linha de cima, porém de forma mais rápida 
+    if (!is_dir("$caminho/$pasta")) {
+      mkdir("$caminho/$pasta", 0755); // o 0755 é uma permissão para Linux.   
+    } else {
+      $arquivos = scandir("$caminho/$pasta");
+      foreach ($arquivos as $arq) {
+        if ($arq != "." && $arq != "..") {
+          $imagem = "$pasta/$arq";
+        }
+      }
+    }
   }
 }
+if (is_numeric($id)) {
+  if (isset($_FILES["foto"])) {
+    if ($_FILES["foto"]["error"] == 0) {
+      $arq_temp = $_FILES["foto"]["tmp_name"];
+      $arq_final = "$caminho/$pasta/" . $_FILES["foto"]["name"];
+      move_uploaded_file($arq_temp, $arq_final);
+    }
+  }
+}
+
 
 ?>
 
@@ -67,46 +94,53 @@ if (is_numeric($id)) {
         <!-- Conteudo principal -->
         <div class="card">
           <div class="card-body">
-            <form method="POST">
+            <form method="POST" action="" enctype="multipart/form-data">
               <div class="row">
                 <div class="col-md-7">
                   <div class="row">
                     <div class="col-md-4 mb-3">
                       <label for="id" class="form-label">ID</label>
-                      <input id="id" name="id" type="id" value="<?=$id?>"
+                      <input id="id" name="id" type="id" value="<?= $id ?>"
                         class="form-control" required>
                     </div>
                     <div class="col-md-12 mb-3">
                       <label for="usuario_id" class=" form-label">Nome</label>
-                      <input id="usuario_id" nome="text" value="<?=$nome?>"
+                      <input id="usuario_id" nome="text" value="<?= $nome ?>"
                         class="form-control" readonly>
 
                     </div>
                     <div class="col-md-12 mb-3">
                       <label for="email" class="form-label">e-mail</label>
-                      <input id="email" name="email" type="email" value="<?=$email?>"
+                      <input id="email" name="email" type="email" value="<?= $email ?>"
                         class="form-control" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                       <label for="senha" class=" form-label">Senha</label>
-                      <input id="senha" type="password" value="<?=$senha?>"
+                      <input id="senha" type="password" value="<?= $senha ?>"
                         class="form-control" readonly>
                     </div>
                   </div>
                 </div>
                 <div class="col-md-5">
                   <label class="form-label" for="foto">Foto</label>
-                  <input class="form-control" id="foto" name="foto" 
-                  type="file" accept="image /png. image/jpeg">
+                  <input class="form-control" id="foto" name="foto"
+                    type="file" accept="image /png. image/jpeg">
+                  <?php
+                  if (isset($imagem)) {
+                  ?>
+                    <img class="img-fluid" src="./img/<?= $imagem ?>">
+                  <?php
+                  }
+                  ?>
                 </div>
               </div>
               <hr>
-                <div class="col-6">
-                  <button type="submit" class="btn-btn">
-                    Salvar 
-                  </button>
-                </div>
+              <div class="col-6">
+                <button type="submit" class="btn-btn">
+                  Salvar
+                </button>
+              </div>
             </form>
 
           </div>
